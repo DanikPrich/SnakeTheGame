@@ -21,7 +21,9 @@ export default {
 		gameOver: false,
 		gameActive: false,
 
-		foodPos: []
+		foodPos: [],
+
+		score: 0,
 	},
 	mutations: {
 			setField(state, array) {
@@ -55,6 +57,13 @@ export default {
 
 			setFoodPosition(state, newPos) {
 				state.foodPos = newPos;
+			},
+
+			setScore(state, newScore) {
+				state.score = newScore;
+			},
+			incrementScore(state) {
+				state.score = state.score + 1;
 			}
 	},
 	getters: {
@@ -91,6 +100,7 @@ export default {
 				} */
 				commit('setGameOver', false)
 				commit('setGameActive', false)
+				commit('setScore', 0)
 
 				dispatch('refreshField')
 				.then((fieldArr) => {
@@ -158,6 +168,7 @@ export default {
 						// debugger
 						if(state.foodPos[0] === state.head[0] && state.foodPos[1] === state.head[1]) {
 							console.log('hit')
+							commit('incrementScore')
 							dispatch('setRandomFoodPosition')
 						}
 

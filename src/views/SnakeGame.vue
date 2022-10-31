@@ -4,7 +4,27 @@
     <game-field/>
     <button @click="startGame">Start</button>
     <button @click="refreshGame"> Refresh </button>
+    <span class="game__score">Score: {{$score}}</span>
     <span class="game__over" v-show="$gameOver">GAME OVER!</span>
+
+    <div class="controll">
+      <div class="controll__block">
+        <div class="controll__block-top">
+          <button @click="controllButton(0)" class="controll__block-button">Top</button>
+        </div>
+        <div class="controll__block-center">
+          <button @click="controllButton(3)" class="controll__block-button">Left</button>
+          <button @click="controllButton(1)" class="controll__block-button">Right</button>
+        </div>
+        <div class="controll__block-top">
+          <button @click="controllButton(2)" class="controll__block-button">Bot</button>
+        </div>
+        <!-- <button class="controll__block-button">Top</button>
+        <button class="controll__block-button">Top</button>
+        <button class="controll__block-button">Top</button>
+        <button class="controll__block-button">Top</button> -->
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,6 +54,7 @@ export default {
       $head: 'head',
       $gameActive : 'gameActive',
       $gameOver : 'gameOver',
+      $score: 'score'
     })
   },
   methods: {
@@ -78,6 +99,10 @@ export default {
       }
 
       //ArrowRight ArrowDown ArrowLeft ArrowUp
+    },
+
+    controllButton(e) {
+      this.changeDirection(e)
     }
 
     /* goRight() {
@@ -97,5 +122,26 @@ export default {
     color: red
     font-size: 16px
     margin-left: 15px
+  &__score
+    color: green
+    font-size: 16px
+    margin-left: 15px
 
+.controll
+  width: 330px
+  display: flex
+  justify-content: center
+  &__block
+    width: 150px
+    height: 150px
+    margin-top: 15px
+    &-top
+      display: flex
+      justify-content: center
+    &-center
+      display: flex
+      justify-content: space-between
+    &-button
+      width: 50px
+      height: 50px
 </style>
