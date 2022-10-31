@@ -8,9 +8,9 @@ export default {
 		// 1 snake body
 		// 2 food
 		field: [],
-		fieldLength: 25,
+		fieldLength: 15,
 		
-		head: [12, 12],
+		head: [0, 0],
 
 		//dir 0 - up 
 		//dir 1 - right
@@ -19,18 +19,27 @@ export default {
 		direction: 0,
 
 		gameOver: false,
-		gameActive: false
+		gameActive: false,
+
+		foodPos: []
 	},
 	mutations: {
 			setField(state, array) {
 				state.field = array
 			},
 
-			changeYHead(state, newX) {
-				Vue.set(state.head, 0, newX);
+			changeHead(state, newHead) {
+				// Vue.set(state.head, 1, newX);
+				// Vue.set(state.head, 0, newY);
+
+				state.head = newHead
 			},
-			changeXHead(state, newY) {
-				Vue.set(state.head, 1, newY);
+
+			changeYHead(state, newY) {
+				Vue.set(state.head, 0, newY);
+			},
+			changeXHead(state, newX) {
+				Vue.set(state.head, 1, newX);
 			},
 
 			changeDirection(state, newDir) {
@@ -42,14 +51,22 @@ export default {
 			},
 			setGameActive(state, newVal) {
 				state.gameActive = newVal
+			},
+
+			setFoodPosition(state, newPos) {
+				state.foodPos = newPos;
 			}
 	},
 	getters: {
-			gameOver(state) {
+			/* gameOver(state) {
 				if(state.head[0] < 0 || state.head[0] >= state.fieldLength|| state.head[1] < 0 || state.head[1] >= state.fieldLength)
 				return true
 				else return false
-			}
+			} */
+
+			/* createFood(state) {
+				return [Math.floor(Math.random() * 24), Math.floor(Math.random() * 24)]
+			} */
 	},
 	actions: {
 			refreshField({commit, state}) {
@@ -72,12 +89,19 @@ export default {
 						fieldArr[i][j] = null;
 					}
 				} */
+				commit('setGameOver', false)
+				commit('setGameActive', false)
 
 				dispatch('refreshField')
 				.then((fieldArr) => {
 
-					fieldArr[12][12] = 0;
+					commit('changeHead', [Math.floor(state.fieldLength/2), Math.floor(state.fieldLength/2)])
+
+					fieldArr[state.head[0]][state.head[1]] = 0;
+
 					commit('setField', fieldArr)
+
+					dispatch('setRandomFoodPosition')
 
 				})
 				// debugger
@@ -101,28 +125,59 @@ export default {
 				dispatch('refreshField')
 				.then((fieldArr) => {
 
-					
-					if(!state.gameOver){
 
+					if(!state.gameOver) {
+						commit('setGameActive', true)
 						switch(state.direction){
-							case 0: commit('changeYHead', state.head[0] - 1)
+							case 0: {
+								if(state.head[0] - 1 >= 0) commit('changeYHead', state.head[0] - 1)
+								else commit('setGameOver', true)
+							}
 							break;
-							case 1: commit('changeXHead', state.head[1] + 1)
+							case 1: {
+								if(state.head[1] + 1 < state.fieldLength) commit('changeXHead', state.head[1] + 1)
+								else commit('setGameOver', true)
+							}
 							break;
-							case 2: commit('changeYHead', state.head[0] + 1)
+							case 2: {
+								if(state.head[0] + 1 < state.fieldLength) commit('changeYHead', state.head[0] + 1)
+								else commit('setGameOver', true)
+								// commit('changeYHead', state.head[0] + 1)
+							}
 							break;
-							case 3: commit('changeXHead', state.head[1] - 1)
+							case 3: {
+								if(state.head[1] - 1 >= 0) commit('changeXHead', state.head[1] - 1)
+								else commit('setGameOver', true)
+								// commit('changeXHead', state.head[1] - 1)
+							}
 							break;
 						}
-					}
-					if(!getters.gameOver){
-
+						fieldArr[state.foodPos[0]][state.foodPos[1]] = 2;
+						
 						fieldArr[state.head[0]][state.head[1]] = 0;
-						commit('setField', fieldArr)
+						// debugger
+						if(state.foodPos[0] === state.head[0] && state.foodPos[1] === state.head[1]) {
+							console.log('hit')
+							dispatch('setRandomFoodPosition')
+						}
 
+						// let foodPos = getters.createFood
+
+						/* dispatch('setRandomFood')
+
+						.then((foodPos) => {
+							debugger
+							fieldArr[foodPos[0]][foodPos[1]] = 2;
+						}) */
+
+
+
+						commit('setField', fieldArr)
 					} else {
-						commit('setGameOver', true)
+
+						commit('setGameActive', false)
 					}
+					
 					
 				});
 
@@ -132,8 +187,9 @@ export default {
 				commit('setField', fieldArr) */
 			},
 
-			setRandomDirection() {
-
+			setRandomFoodPosition({state, commit}) {
+				commit('setFoodPosition', [Math.floor(Math.random() * (state.fieldLength - 1)), Math.floor(Math.random() * (state.fieldLength - 1))]);
+				// commit('setFoodPosition', [8, 12]);
 			}
 	},
 }

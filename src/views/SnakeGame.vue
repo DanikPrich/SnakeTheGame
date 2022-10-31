@@ -1,8 +1,10 @@
 <template>
   <div class="game">
+    <keyboard-events @keyup="keyboardEvent"></keyboard-events>
     <game-field/>
     <button @click="startGame">Start</button>
-    <keyboard-events @keyup="keyboardEvent"></keyboard-events>
+    <button @click="refreshGame"> Refresh </button>
+    <span class="game__over" v-show="$gameOver">GAME OVER!</span>
   </div>
 </template>
 
@@ -21,27 +23,44 @@ export default {
     gameField,
     keyboardEvents
   },
+  watch: {
+    $gameOver(newVal, oldVal) {
+      if (newVal == true) clearInterval(this.interval);
+    }
+  },
   computed:{
     ...mapState('snakeGame',{
       $field :'field',
-      $head: 'head'
+      $head: 'head',
+      $gameActive : 'gameActive',
+      $gameOver : 'gameOver',
     })
   },
   methods: {
     ...mapActions({
       gameInit: "snakeGame/gameInit",
-      gameTick: "snakeGame/gameTick"
+      gameTick: "snakeGame/gameTick",
+      
     }),
     ...mapMutations({
       changeXHead: 'snakeGame/changeXHead',
-      changeDirection: 'snakeGame/changeDirection'
+      changeDirection: 'snakeGame/changeDirection',
+      setGameActive: 'snakeGame/setGameActive'
     }),
 
     startGame() {
-      this.interval = setInterval(()=>{
-        this.gameTick()
+      if(!this.$gameActive) {
+        this.setGameActive(true)
+        this.interval = setInterval(()=>{
+          this.gameTick()
 
-      }, 800)
+        }, 300)
+      }
+    },
+
+    refreshGame() {
+      clearInterval(this.interval);
+      this.gameInit();
     },
 
     keyboardEvent(e) {
@@ -70,3 +89,13 @@ export default {
   }
 }
 </script>
+
+<style lang="sass" scoped>
+
+.game
+  &__over
+    color: red
+    font-size: 16px
+    margin-left: 15px
+
+</style>
