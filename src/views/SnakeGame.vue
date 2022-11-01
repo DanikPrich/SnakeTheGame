@@ -143,6 +143,8 @@ export default {
       border: 1px solid lightgrey
       background-color: #fff
       cursor: pointer
+      color: black
+      font-size: 16px
       &_start
         justify-content: start
       &_refresh
@@ -180,7 +182,7 @@ export default {
   display: flex
   justify-content: center
   &__block
-    width: 300px
+    width: 200px
     height: 300px
     margin-top: 15px
     &-top
@@ -190,8 +192,8 @@ export default {
       display: flex
       justify-content: space-between
     &-button
-      width: 100px
-      height: 100px
+      width: 66px
+      height: 66px
       font-size: 28px
       &_right
         background: center / contain no-repeat url("../img/Arrow.png")
