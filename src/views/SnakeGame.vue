@@ -85,7 +85,7 @@ export default {
         this.interval = setInterval(()=>{
           this.gameTick()
 
-        }, 200)
+        }, 300)
       }
     },
 
@@ -183,7 +183,7 @@ export default {
   justify-content: center
   &__block
     width: 200px
-    height: 300px
+    height: 200px
     margin-top: 15px
     &-top
       display: flex
