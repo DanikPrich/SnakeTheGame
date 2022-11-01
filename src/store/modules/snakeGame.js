@@ -1,4 +1,15 @@
 import Vue from "vue"
+import { isItemInArray, randomPosition } from "@/helpers"
+
+
+/* function isItemInArray(array, item) {
+	for(let i=0; i<array.length; i++) {
+			if (array[i][0] == item[0] && array[i][1] == item[1]) {
+					return true;   // Found it
+			}
+	}
+	return false;   // Not found
+}	 */
 
 export default {
 	namespaced: true,
@@ -64,7 +75,7 @@ export default {
 
 
 
-			changeDirection(state, newDir) {
+			setDirection(state, newDir) {
 				state.direction = newDir
 			},
 
@@ -155,14 +166,20 @@ export default {
 					}
 				} */
 
-				function isItemInArray(array, item) {
+
+
+
+
+
+
+				/* function isItemInArray(array, item) {
 					for(let i=0; i<array.length; i++) {
 							if (array[i][0] == item[0] && array[i][1] == item[1]) {
 									return true;   // Found it
 							}
 					}
 					return false;   // Not found
-				}	
+				}	 */
 
 				dispatch('refreshField')
 				.then((fieldArr) => {
@@ -357,9 +374,40 @@ export default {
 				commit('setField', fieldArr) */
 			},
 
+			changeDirection({state, commit}, newDirection){
+
+				if(state.direction == 0 && newDirection == 2 
+					|| state.direction == 1 && newDirection == 3 
+					|| state.direction == 2 && newDirection == 0 
+					|| state.direction == 3 && newDirection == 1
+				){
+					return
+				}
+
+				// if(state.direction == 1 && newDirection == 3){
+				// 	return
+				// }
+
+				// if(state.direction == 2 && newDirection == 0){
+				// 	return
+				// }
+
+				// if(state.direction == 3 && newDirection == 1){
+				// 	return
+				// }
+				
+
+				commit('setDirection', newDirection)
+			},
+
 			setRandomFoodPosition({state, commit}) {
-				commit('setFoodPosition', [Math.floor(Math.random() * (state.fieldLength - 1)), Math.floor(Math.random() * (state.fieldLength - 1))]);
-				// commit('setFoodPosition', [9, 7]);
+				let randPos = randomPosition(state.fieldLength - 1)
+				commit('setFoodPosition', randPos);
+
+				while(isItemInArray(state.snakeParts, randPos)){
+					randPos = randomPosition(state.fieldLength - 1)
+					commit('setFoodPosition', randPos);
+				}
 			}
 	},
 }

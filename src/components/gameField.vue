@@ -44,13 +44,16 @@ import { mapState } from 'vuex'
 	&__line
 		display: flex
 	&__block
-		width: 20px
-		height: 20px
+		width: 23px
+		height: 23px
 		margin: 0
 		border: 1px white solid
 		background-color: lightgrey
 		&-food
-			background-color: brown
+			// background:  url('../img/apple.png')
+			background: center / contain no-repeat url("../img/apple.png")
+			background-color: lightgrey
+
 		&-head
 			background-color: black
 		

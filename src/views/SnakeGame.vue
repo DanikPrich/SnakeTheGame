@@ -2,23 +2,31 @@
   <div class="game">
     <keyboard-events @keyup="keyboardEvent"></keyboard-events>
     <game-field/>
-    <button @click="startGame">Start</button>
-    <button @click="refreshGame"> Refresh </button>
-    <!-- <input type="number" placeholder="Game speed" class="game__speed" v-model="$gameSpeed"> -->
-    <span class="game__score">Score: {{$score}}</span>
-    <span class="game__over" v-show="$gameOver">GAME OVER!</span>
+
+    <div class="game__bottom">
+      <button @click="startGame" class="game__bottom-btns game__bottom-btns_start ">Start</button>
+      <span class="game__bottom-score" v-show="!$gameOver">Score: {{$score}}</span>
+      <button @click="refreshGame" class="game__bottom-btns game__bottom-btns_refresh"> Refresh </button>
+    </div>
+
+
+    <!-- <span class="game__over" v-show="$gameOver">GAME OVER!</span> -->
+    <div class="game__over" v-show="$gameOver">
+      <span class="game__over-title">You loose it</span>
+      <span class="game__over-text">Score: {{$score}}</span>
+    </div>
 
     <div class="controll">
       <div class="controll__block">
         <div class="controll__block-top">
-          <button @click="controllButton(0)" class="controll__block-button">Top</button>
+          <button @click="controllButton(0)" class="controll__block-button controll__block-button_top"></button>
         </div>
         <div class="controll__block-center">
-          <button @click="controllButton(3)" class="controll__block-button">Left</button>
-          <button @click="controllButton(1)" class="controll__block-button">Right</button>
+          <button @click="controllButton(3)" class="controll__block-button controll__block-button_left"></button>
+          <button @click="controllButton(1)" class="controll__block-button controll__block-button_right"></button>
         </div>
         <div class="controll__block-top">
-          <button @click="controllButton(2)" class="controll__block-button">Bot</button>
+          <button @click="controllButton(2)" class="controll__block-button controll__block-button_bot"></button>
         </div>
         <!-- <button class="controll__block-button">Top</button>
         <button class="controll__block-button">Top</button>
@@ -63,11 +71,11 @@ export default {
     ...mapActions({
       gameInit: "snakeGame/gameInit",
       gameTick: "snakeGame/gameTick",
+      changeDirection: 'snakeGame/changeDirection',
       
     }),
     ...mapMutations({
       changeXHead: 'snakeGame/changeXHead',
-      changeDirection: 'snakeGame/changeDirection',
       setGameActive: 'snakeGame/setGameActive'
     }),
 
@@ -120,23 +128,60 @@ export default {
 <style lang="sass" scoped>
 
 .game
+  &__bottom
+    width: 375px
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-top: 5px
+    &-btns
+      width: 100px
+      height: 30px
+      // margin-top: 10px
+      // margin-right: 10px
+      border-radius: 5px
+      border: 1px solid lightgrey
+      background-color: #fff
+      cursor: pointer
+      &_start
+        justify-content: start
+      &_refresh
+        justify-content: center
+    &-score
+      color: green
+      font-size: 16px
+      // margin-left: 15px
   &__over
-    color: red
-    font-size: 16px
-    margin-left: 15px
-  &__score
-    color: green
-    font-size: 16px
-    margin-left: 15px
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: space-between
+    height: 60px
+    width: 200px
+    padding: 10px
+    background-color: rgba(255, 255, 255, 0.9)
+    position: absolute
+    top: 156px
+    left: 85px
+    text-align: center
+    border-radius: 10px
+    
+    &-title
+      color: red
+      font-size: 28px
+      // margin-left: 15px
+      font-weight: bold
+    &-text
+      color: green
   
 
 .controll
-  width: 330px
+  width: 375px
   display: flex
   justify-content: center
   &__block
-    width: 150px
-    height: 150px
+    width: 300px
+    height: 300px
     margin-top: 15px
     &-top
       display: flex
@@ -145,6 +190,19 @@ export default {
       display: flex
       justify-content: space-between
     &-button
-      width: 50px
-      height: 50px
+      width: 100px
+      height: 100px
+      font-size: 28px
+      &_right
+        background: center / contain no-repeat url("../img/Arrow.png")
+      &_left
+        background: center / contain no-repeat url("../img/Arrow.png")
+        transform: rotate(180deg)
+      &_top
+        background: center / contain no-repeat url("../img/Arrow.png")
+        transform: rotate(270deg)
+      &_bot
+        background: center / contain no-repeat url("../img/Arrow.png")
+        transform: rotate(90deg)
+
 </style>
