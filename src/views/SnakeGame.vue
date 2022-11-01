@@ -4,6 +4,7 @@
     <game-field/>
     <button @click="startGame">Start</button>
     <button @click="refreshGame"> Refresh </button>
+    <!-- <input type="number" placeholder="Game speed" class="game__speed" v-model="$gameSpeed"> -->
     <span class="game__score">Score: {{$score}}</span>
     <span class="game__over" v-show="$gameOver">GAME OVER!</span>
 
@@ -54,7 +55,8 @@ export default {
       $head: 'head',
       $gameActive : 'gameActive',
       $gameOver : 'gameOver',
-      $score: 'score'
+      $score: 'score',
+      $gameSpeed: 'gameSpeed'
     })
   },
   methods: {
@@ -75,7 +77,7 @@ export default {
         this.interval = setInterval(()=>{
           this.gameTick()
 
-        }, 300)
+        }, 200)
       }
     },
 
@@ -126,6 +128,7 @@ export default {
     color: green
     font-size: 16px
     margin-left: 15px
+  
 
 .controll
   width: 330px
