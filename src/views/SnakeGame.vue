@@ -71,12 +71,12 @@ export default {
     ...mapActions({
       gameInit: "snakeGame/gameInit",
       gameTick: "snakeGame/gameTick",
-      changeDirection: 'snakeGame/changeDirection',
       
     }),
     ...mapMutations({
       changeXHead: 'snakeGame/changeXHead',
-      setGameActive: 'snakeGame/setGameActive'
+      setGameActive: 'snakeGame/setGameActive',
+      changeDirection: 'snakeGame/setDirection',
     }),
 
     startGame() {

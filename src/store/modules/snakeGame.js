@@ -1,16 +1,6 @@
 import Vue from "vue"
 import { isItemInArray, randomPosition } from "@/helpers"
 
-
-/* function isItemInArray(array, item) {
-	for(let i=0; i<array.length; i++) {
-			if (array[i][0] == item[0] && array[i][1] == item[1]) {
-					return true;   // Found it
-			}
-	}
-	return false;   // Not found
-}	 */
-
 export default {
 	namespaced: true,
 	state: {
@@ -21,7 +11,6 @@ export default {
 		field: [],
 		fieldLength: 15,
 		
-		// head: [0, 0],
 		snakeParts: [],
 		snakeLenngth: 0,
 
@@ -29,7 +18,8 @@ export default {
 		//dir 1 - right
 		//dir 2 - bottom
 		//dir 3 - left
-		direction: 2,
+		oldDirection: 0,
+		direction: 0,
 
 		gameOver: false,
 		gameActive: false,
@@ -46,37 +36,22 @@ export default {
 			},
 
 			changeSnakeParts(state, newPart) {
-				// Vue.set(state.head, 1, newX);
-				// Vue.set(state.head, 0, newY);
-				// debugger
-				// let p = [...newPart]
 				state.snakeParts = [newPart]
-				// state.snakeParts.push([...newPart])
 			},
-
-			/* changeYHead(state, newY) {
-				Vue.set(state.head, 0, newY);
-			},
-			changeXHead(state, newX) {
-				Vue.set(state.head, 1, newX);
-			}, */
-
-
 
 			changeHead(state, {newPos, addNew}){
-				// debugger
 				if(!addNew) {
 					state.snakeParts.shift()
 				}
 				state.snakeParts.push([...newPos])
-				
 			},
-
-
-
 
 			setDirection(state, newDir) {
 				state.direction = newDir
+			},
+			
+			setOldDirection(state, newOldDir) {
+				state.oldDirection = newOldDir
 			},
 
 			setGameOver(state, newVal) {
@@ -100,17 +75,6 @@ export default {
 				state.snakeLenngth = state.score;
 			}
 	},
-	getters: {
-			/* gameOver(state) {
-				if(state.head[0] < 0 || state.head[0] >= state.fieldLength|| state.head[1] < 0 || state.head[1] >= state.fieldLength)
-				return true
-				else return false
-			} */
-
-			/* createFood(state) {
-				return [Math.floor(Math.random() * 24), Math.floor(Math.random() * 24)]
-			} */
-	},
 	actions: {
 			refreshField({commit, state}) {
 				let fieldArr = Array(state.fieldLength).fill().map(() => Array(state.fieldLength));
@@ -125,13 +89,7 @@ export default {
 			},
 
 			gameInit({commit, state, dispatch}) {
-				/* let fieldArr = Array(state.fieldLength).fill().map(() => Array(state.fieldLength));
-
-				for (let i = 0; i < state.fieldLength; i++) {
-					for (let j = 0; j < state.fieldLength; j++) {
-						fieldArr[i][j] = null;
-					}
-				} */
+			
 				commit('setGameOver', false)
 				commit('setGameActive', false)
 				commit('setScore', 0)
@@ -148,38 +106,11 @@ export default {
 					dispatch('setRandomFoodPosition')
 
 				})
-				// debugger
-				// fieldArr[state.head[0]][state.head[1]] = 0;
-				// commit('setField', fieldArr)
-				//return fieldArr
 
 			},
 
 
-			gameTick({commit, state, dispatch, getters}) {
-				
-				/* let fieldArr = Array(state.fieldLength).fill().map(() => Array(state.fieldLength));
-
-				for (let i = 0; i < state.fieldLength; i++) {
-					for (let j = 0; j < state.fieldLength; j++) {
-						fieldArr[i][j] = null;
-					}
-				} */
-
-
-
-
-
-
-
-				/* function isItemInArray(array, item) {
-					for(let i=0; i<array.length; i++) {
-							if (array[i][0] == item[0] && array[i][1] == item[1]) {
-									return true;   // Found it
-							}
-					}
-					return false;   // Not found
-				}	 */
+			gameTick({commit, state, dispatch}) {
 
 				dispatch('refreshField')
 				.then((fieldArr) => {
@@ -187,48 +118,19 @@ export default {
 
 					if(!state.gameOver) {
 						commit('setGameActive', true)
-						/* switch(state.direction){
-							case 0: {
-								if(state.head[0] - 1 >= 0){
-									commit('changeYHead', state.head[0] - 1)
-								}
-								else 
-									commit('setGameOver', true)
-							}
-							break;
-							case 1: {
-								if(state.head[1] + 1 < state.fieldLength) 
-									commit('changeXHead', state.head[1] + 1)
-								else 
-									commit('setGameOver', true)
-							}
-							break;
-							case 2: {
-								if(state.head[0] + 1 < state.fieldLength) 
-									commit('changeYHead', state.head[0] + 1)
-								else
-									commit('setGameOver', true)
-								// commit('changeYHead', state.head[0] + 1)
-							}
-							break;
-							case 3: {
-								if(state.head[1] - 1 >= 0) 
-									commit('changeXHead', state.head[1] - 1)
-								else 
-									commit('setGameOver', true)
-								// commit('changeXHead', state.head[1] - 1)
-							}
-							break;
-						} */
+
+						dispatch('checkDirection')
 
 						switch(state.direction){
 							case 0: {
 								if(state.snakeParts[state.snakeLenngth][0] - 1 >= 0){
 
 									//Hit himself
-									if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0] - 1, state.snakeParts[state.snakeLenngth][1]])){
+									/* if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0] - 1, state.snakeParts[state.snakeLenngth][1]])){
 										commit('setGameOver', true)
-									}
+									} */
+
+									dispatch('checkHitHimself', {y: -1, x: 0})
 
 									if(state.foodPos[0] === state.snakeParts[state.snakeLenngth][0] - 1 && state.foodPos[1] === state.snakeParts[state.snakeLenngth][1]){
 										commit('changeHead', {
@@ -254,11 +156,13 @@ export default {
 									// debugger
 
 									//Hit himself
-									if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] + 1])){
+									/* if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] + 1])){
 										commit('setGameOver', true)
-									}
+									} */
 
-									if(state.foodPos[1] === state.snakeParts[state.snakeLenngth][1] + 1 && state.foodPos[0] === state.snakeParts[state.snakeLenngth][0]){
+									dispatch('checkHitHimself', {y: 0, x: 1})
+
+									if(state.foodPos[0] === state.snakeParts[state.snakeLenngth][0] && state.foodPos[1] === state.snakeParts[state.snakeLenngth][1] + 1){
 										commit('changeHead', {
 											newPos: [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] + 1], 
 											addNew: true
@@ -286,9 +190,12 @@ export default {
 								if(state.snakeParts[state.snakeLenngth][0] + 1 < state.fieldLength){
 
 									//Hit himself
-									if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0] + 1, state.snakeParts[state.snakeLenngth][1]])){
+									/* if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0] + 1, state.snakeParts[state.snakeLenngth][1]])){
 										commit('setGameOver', true)
-									}
+									} */
+
+									dispatch('checkHitHimself', {y: 1, x: 0})
+
 
 									if(state.foodPos[0] === state.snakeParts[state.snakeLenngth][0] + 1 && state.foodPos[1] === state.snakeParts[state.snakeLenngth][1]){
 										commit('changeHead', {
@@ -314,12 +221,14 @@ export default {
 								if(state.snakeParts[state.snakeLenngth][1] - 1 >= 0 ){
 
 									//Hit himself
-									if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] - 1])){
+									/* if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] - 1])){
 										commit('setGameOver', true)
-									}
+									} */
+
+									dispatch('checkHitHimself', {y: 0, x: -1})
 
 									// debugger
-									if(state.foodPos[1] === state.snakeParts[state.snakeLenngth][1] - 1 && state.foodPos[0] === state.snakeParts[state.snakeLenngth][0]){
+									if(state.foodPos[0] === state.snakeParts[state.snakeLenngth][0] && state.foodPos[1] === state.snakeParts[state.snakeLenngth][1] - 1){
 										commit('changeHead', {
 											newPos: [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] - 1], 
 											addNew: true
@@ -340,24 +249,14 @@ export default {
 							break;
 						}
 
+						commit('setOldDirection', state.direction)
+
+
 						fieldArr[state.foodPos[0]][state.foodPos[1]] = 2;
 
 						state.snakeParts.forEach(snakePart => {
-							// debugger
 							fieldArr[snakePart[0]][snakePart[1]] = 0
 						})
-						// fieldArr[state.head[0]][state.head[1]] = 0;
-
-
-
-
-						/* if(state.foodPos[0] === state.head[0] && state.foodPos[1] === state.head[1]) {
-							console.log('hit')
-							commit('incrementScore')
-							dispatch('setRandomFoodPosition')
-						
-						} */
-
 
 						commit('setField', fieldArr)
 					} else {
@@ -365,39 +264,24 @@ export default {
 						commit('setGameActive', false)
 					}
 					
-					
 				});
 
-
-
-				/* fieldArr[state.head[0]][state.head[1]] = 0;
-				commit('setField', fieldArr) */
 			},
 
-			changeDirection({state, commit}, newDirection){
-
-				if(state.direction == 0 && newDirection == 2 
-					|| state.direction == 1 && newDirection == 3 
-					|| state.direction == 2 && newDirection == 0 
-					|| state.direction == 3 && newDirection == 1
-				){
-					return
+			checkDirection({state, commit}) {
+				if(state.oldDirection == 0 && state.direction == 2
+					|| state.oldDirection == 1 && state.direction == 3 
+					|| state.oldDirection == 2 && state.direction == 0 
+					|| state.oldDirection == 3 && state.direction == 1){
+					commit('setDirection', state.oldDirection)
 				}
+			},
 
-				// if(state.direction == 1 && newDirection == 3){
-				// 	return
-				// }
-
-				// if(state.direction == 2 && newDirection == 0){
-				// 	return
-				// }
-
-				// if(state.direction == 3 && newDirection == 1){
-				// 	return
-				// }
-				
-
-				commit('setDirection', newDirection)
+			checkHitHimself({state, commit}, {x, y}) {
+				// debugger
+				if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0] + y, state.snakeParts[state.snakeLenngth][1] + x])){
+					commit('setGameOver', true)
+				}
 			},
 
 			setRandomFoodPosition({state, commit}) {
