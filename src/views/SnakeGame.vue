@@ -6,9 +6,19 @@
     <div class="game__bottom">
       <button @click="startGame" class="game__bottom-btns game__bottom-btns_start ">Start</button>
       <span class="game__bottom-score" v-show="!$gameOver">Score: {{$score}}</span>
+
+      
       <button @click="refreshGame" class="game__bottom-btns game__bottom-btns_refresh"> Refresh </button>
     </div>
 
+    <label for="speed">Speed:</label>
+    <select name="speed" @change="setNewGameSpeed" v-model="gameSpeedValue" class="game__speed">
+      <option value="1000">1</option>
+      <option value="700">2</option>
+      <option value="500">3</option>
+      <option value="300">4</option>
+      <option value="200">5</option>
+    </select>
 
     <!-- <span class="game__over" v-show="$gameOver">GAME OVER!</span> -->
     <div class="game__over" v-show="$gameOver">
@@ -45,7 +55,8 @@ export default {
   name: 'SnakeGame',
   data() {
     return {
-      interval: null
+      interval: null,
+      gameSpeedValue: 300
     }
   },
   components: {
@@ -77,6 +88,7 @@ export default {
       changeXHead: 'snakeGame/changeXHead',
       setGameActive: 'snakeGame/setGameActive',
       changeDirection: 'snakeGame/setDirection',
+      setGameSpeed: 'snakeGame/setGameSpeed',
     }),
 
     startGame() {
@@ -85,7 +97,7 @@ export default {
         this.interval = setInterval(()=>{
           this.gameTick()
 
-        }, 300)
+        }, this.$gameSpeed)
       }
     },
 
@@ -113,11 +125,11 @@ export default {
 
     controllButton(e) {
       this.changeDirection(e)
-    }
+    },
 
-    /* goRight() {
-      this.changeXHead(this.$head[1] + 1)
-    } */
+    setNewGameSpeed() {
+      this.setGameSpeed(this.gameSpeedValue)
+    }
   },
   mounted() {
     this.gameInit();
@@ -147,6 +159,7 @@ export default {
       font-size: 16px
       &_start
         justify-content: start
+        margin-bottom: 10px
       &_refresh
         justify-content: center
     &-score
@@ -167,7 +180,6 @@ export default {
     left: 85px
     text-align: center
     border-radius: 10px
-    
     &-title
       color: red
       font-size: 28px
@@ -175,7 +187,13 @@ export default {
       font-weight: bold
     &-text
       color: green
-  
+  &__speed
+    width: 42px
+    height: 25px
+    font-size: 16px
+    margin-left: 10px
+
+
 
 .controll
   width: 375px

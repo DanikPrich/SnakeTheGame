@@ -25,9 +25,7 @@ export default {
 		gameActive: false,
 
 		foodPos: [],
-
 		score: 0,
-
 		gameSpeed: 300,
 	},
 	mutations: {
@@ -73,6 +71,10 @@ export default {
 			incrementScore(state) {
 				state.score = state.score + 1;
 				state.snakeLenngth = state.score;
+			},
+
+			setGameSpeed(state, newSpeed) {
+				state.gameSpeed = newSpeed
 			}
 	},
 	actions: {
@@ -112,9 +114,24 @@ export default {
 
 			gameTick({commit, state, dispatch}) {
 
+				function isHitTheWall({x, y}) {
+					let newPos = {
+						x: state.snakeParts[state.snakeLenngth][1] + x,
+						y: state.snakeParts[state.snakeLenngth][0] + y, 
+					}, 
+					checkingAxis = y == 0 ? 'x' : 'y'
+	
+					if(newPos[checkingAxis] < 0 || newPos[checkingAxis] >= state.fieldLength) {
+						commit('setGameOver', true)
+						return true
+					}
+
+					return false
+				}
+
+
 				dispatch('refreshField')
 				.then((fieldArr) => {
-
 
 					if(!state.gameOver) {
 						commit('setGameActive', true)
@@ -123,134 +140,40 @@ export default {
 
 						switch(state.direction){
 							case 0: {
-								if(state.snakeParts[state.snakeLenngth][0] - 1 >= 0){
-
-									//Hit himself
-									/* if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0] - 1, state.snakeParts[state.snakeLenngth][1]])){
-										commit('setGameOver', true)
-									} */
-
-									dispatch('checkHitHimself', {y: -1, x: 0})
-
-									if(state.foodPos[0] === state.snakeParts[state.snakeLenngth][0] - 1 && state.foodPos[1] === state.snakeParts[state.snakeLenngth][1]){
-										commit('changeHead', {
-											newPos: [state.snakeParts[state.snakeLenngth][0] - 1, state.snakeParts[state.snakeLenngth][1]], 
-											addNew: true
-										})
-										console.log('hit')
-										commit('incrementScore')
-										dispatch('setRandomFoodPosition')
-									} else {
-										commit('changeHead', {
-											newPos: [state.snakeParts[state.snakeLenngth][0] - 1, state.snakeParts[state.snakeLenngth][1]], 
-											addNew: false
-										})
-									}
-
-								}
-								else commit('setGameOver', true)
+								const nextPosition = {y: -1, x: 0}
+									if(!isHitTheWall(nextPosition)) {
+										dispatch('checkHitHimself', nextPosition)
+										dispatch('moveAndCheckFood', nextPosition)
+									} 
 							}
 							break;
 							case 1: {
-								if(state.snakeParts[state.snakeLenngth][1] + 1 < state.fieldLength){
-									// debugger
-
-									//Hit himself
-									/* if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] + 1])){
-										commit('setGameOver', true)
-									} */
-
-									dispatch('checkHitHimself', {y: 0, x: 1})
-
-									if(state.foodPos[0] === state.snakeParts[state.snakeLenngth][0] && state.foodPos[1] === state.snakeParts[state.snakeLenngth][1] + 1){
-										commit('changeHead', {
-											newPos: [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] + 1], 
-											addNew: true
-										})
-										console.log('hit')
-										commit('incrementScore')
-										dispatch('setRandomFoodPosition')
-									} else {
-										commit('changeHead', {
-											newPos: [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] + 1], 
-											addNew: false
-										})
-									}
-
+								const nextPosition = {y: 0, x: 1}
+								if(!isHitTheWall(nextPosition)) {
+									dispatch('checkHitHimself', nextPosition)
+									dispatch('moveAndCheckFood', nextPosition)
 								}
-								else 
-									commit('setGameOver', true)
-
 							}
 							break;
 							case 2: {
-
-								
-
-								if(state.snakeParts[state.snakeLenngth][0] + 1 < state.fieldLength){
-
-									//Hit himself
-									/* if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0] + 1, state.snakeParts[state.snakeLenngth][1]])){
-										commit('setGameOver', true)
-									} */
-
-									dispatch('checkHitHimself', {y: 1, x: 0})
-
-
-									if(state.foodPos[0] === state.snakeParts[state.snakeLenngth][0] + 1 && state.foodPos[1] === state.snakeParts[state.snakeLenngth][1]){
-										commit('changeHead', {
-											newPos: [state.snakeParts[state.snakeLenngth][0] + 1, state.snakeParts[state.snakeLenngth][1]], 
-											addNew: true
-										})
-										console.log('hit')
-										commit('incrementScore')
-										dispatch('setRandomFoodPosition')
-									} else {
-										commit('changeHead', {
-											newPos: [state.snakeParts[state.snakeLenngth][0] + 1, state.snakeParts[state.snakeLenngth][1]], 
-											addNew: false
-										})
-									}
-
+								const nextPosition = {y: 1, x: 0}
+								if(!isHitTheWall(nextPosition)) {
+									dispatch('checkHitHimself', nextPosition)
+									dispatch('moveAndCheckFood', nextPosition)
 								}
-								else 
-									commit('setGameOver', true)
 							}
 							break;
 							case 3: {
-								if(state.snakeParts[state.snakeLenngth][1] - 1 >= 0 ){
-
-									//Hit himself
-									/* if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] - 1])){
-										commit('setGameOver', true)
-									} */
-
-									dispatch('checkHitHimself', {y: 0, x: -1})
-
-									// debugger
-									if(state.foodPos[0] === state.snakeParts[state.snakeLenngth][0] && state.foodPos[1] === state.snakeParts[state.snakeLenngth][1] - 1){
-										commit('changeHead', {
-											newPos: [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] - 1], 
-											addNew: true
-										})
-										console.log('hit')
-										commit('incrementScore')
-										dispatch('setRandomFoodPosition')
-									} else {
-										commit('changeHead', {
-											newPos: [state.snakeParts[state.snakeLenngth][0], state.snakeParts[state.snakeLenngth][1] - 1], 
-											addNew: false
-										})
-									}
-
+								const nextPosition = {y: 0, x: -1}
+								if(!isHitTheWall(nextPosition)) {
+									dispatch('checkHitHimself', nextPosition)
+									dispatch('moveAndCheckFood', nextPosition)
 								}
-								else commit('setGameOver', true)
 							}
 							break;
 						}
 
 						commit('setOldDirection', state.direction)
-
 
 						fieldArr[state.foodPos[0]][state.foodPos[1]] = 2;
 
@@ -278,20 +201,43 @@ export default {
 			},
 
 			checkHitHimself({state, commit}, {x, y}) {
-				// debugger
-				if(isItemInArray(state.snakeParts, [state.snakeParts[state.snakeLenngth][0] + y, state.snakeParts[state.snakeLenngth][1] + x])){
+				let newPos = {
+					x: state.snakeParts[state.snakeLenngth][1] + x,
+					y: state.snakeParts[state.snakeLenngth][0] + y, 
+				}
+				
+				if(isItemInArray(state.snakeParts, [newPos.y,  newPos.x])){
 					commit('setGameOver', true)
 				}
 			},
 
-			setRandomFoodPosition({state, commit}) {
-				let randPos = randomPosition(state.fieldLength - 1)
-				commit('setFoodPosition', randPos);
-
-				while(isItemInArray(state.snakeParts, randPos)){
-					randPos = randomPosition(state.fieldLength - 1)
-					commit('setFoodPosition', randPos);
+			moveAndCheckFood({state, commit, dispatch}, {x, y}) {
+				let newPos = {
+					x: state.snakeParts[state.snakeLenngth][1] + x,
+					y: state.snakeParts[state.snakeLenngth][0] + y, 
 				}
-			}
+
+				if(state.foodPos[0] === newPos.y && state.foodPos[1] === newPos.x){
+					commit('changeHead', {
+						newPos: [newPos.y, newPos.x], 
+						addNew: true
+					})
+					commit('incrementScore')
+					dispatch('setRandomFoodPosition')
+				} else {
+					commit('changeHead', {
+						newPos: [newPos.y, newPos.x], 
+						addNew: false
+					})
+				}
+			},
+
+			setRandomFoodPosition({state, commit}) {
+				let randPos;
+				do {
+					randPos = randomPosition(state.fieldLength - 1)
+				} while(isItemInArray(state.snakeParts, randPos))
+				commit('setFoodPosition', randPos);
+			},
 	},
 }
