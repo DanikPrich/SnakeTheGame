@@ -14,12 +14,8 @@ export default {
 		snakeParts: [],
 		snakeLenngth: 0,
 
-		//dir 0 - up 
-		//dir 1 - right
-		//dir 2 - bottom
-		//dir 3 - left
-		oldDirection: 0,
-		direction: 0,
+		oldDirection: 'top',
+		direction: 'top',
 
 		gameOver: false,
 		gameActive: false,
@@ -139,7 +135,7 @@ export default {
 						dispatch('checkDirection')
 
 						switch(state.direction){
-							case 0: {
+							case 'top': {
 								const nextPosition = {y: -1, x: 0}
 									if(!isHitTheWall(nextPosition)) {
 										dispatch('checkHitHimself', nextPosition)
@@ -147,7 +143,7 @@ export default {
 									} 
 							}
 							break;
-							case 1: {
+							case 'right': {
 								const nextPosition = {y: 0, x: 1}
 								if(!isHitTheWall(nextPosition)) {
 									dispatch('checkHitHimself', nextPosition)
@@ -155,7 +151,7 @@ export default {
 								}
 							}
 							break;
-							case 2: {
+							case 'bottom': {
 								const nextPosition = {y: 1, x: 0}
 								if(!isHitTheWall(nextPosition)) {
 									dispatch('checkHitHimself', nextPosition)
@@ -163,7 +159,7 @@ export default {
 								}
 							}
 							break;
-							case 3: {
+							case 'left': {
 								const nextPosition = {y: 0, x: -1}
 								if(!isHitTheWall(nextPosition)) {
 									dispatch('checkHitHimself', nextPosition)
@@ -176,10 +172,12 @@ export default {
 						commit('setOldDirection', state.direction)
 
 						fieldArr[state.foodPos[0]][state.foodPos[1]] = 2;
-
+						
 						state.snakeParts.forEach(snakePart => {
-							fieldArr[snakePart[0]][snakePart[1]] = 0
+							fieldArr[snakePart[0]][snakePart[1]] = 1
 						})
+						// debugger
+						fieldArr[state.snakeParts[state.snakeLenngth][0]][state.snakeParts[state.snakeLenngth][1]] = 0
 
 						commit('setField', fieldArr)
 					} else {
@@ -192,10 +190,10 @@ export default {
 			},
 
 			checkDirection({state, commit}) {
-				if(state.oldDirection == 0 && state.direction == 2
-					|| state.oldDirection == 1 && state.direction == 3 
-					|| state.oldDirection == 2 && state.direction == 0 
-					|| state.oldDirection == 3 && state.direction == 1){
+				if(state.oldDirection == 'top' && state.direction == 'bottom'
+					|| state.oldDirection == 'right' && state.direction == 'left'
+					|| state.oldDirection == 'bottom' && state.direction == 'top'
+					|| state.oldDirection == 'left' && state.direction == 'right'){
 					commit('setDirection', state.oldDirection)
 				}
 			},

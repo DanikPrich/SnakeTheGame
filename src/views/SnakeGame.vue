@@ -29,14 +29,14 @@
     <div class="controll">
       <div class="controll__block">
         <div class="controll__block-top">
-          <button @click="controllButton(0)" class="controll__block-button controll__block-button_top"></button>
+          <button @click="controllButton('top')" class="controll__block-button controll__block-button_top"></button>
         </div>
         <div class="controll__block-center">
-          <button @click="controllButton(3)" class="controll__block-button controll__block-button_left"></button>
-          <button @click="controllButton(1)" class="controll__block-button controll__block-button_right"></button>
+          <button @click="controllButton('left')" class="controll__block-button controll__block-button_left"></button>
+          <button @click="controllButton('right')" class="controll__block-button controll__block-button_right"></button>
         </div>
         <div class="controll__block-top">
-          <button @click="controllButton(2)" class="controll__block-button controll__block-button_bot"></button>
+          <button @click="controllButton('bottom')" class="controll__block-button controll__block-button_bot"></button>
         </div>
         <!-- <button class="controll__block-button">Top</button>
         <button class="controll__block-button">Top</button>
@@ -87,7 +87,7 @@ export default {
     ...mapMutations({
       changeXHead: 'snakeGame/changeXHead',
       setGameActive: 'snakeGame/setGameActive',
-      changeDirection: 'snakeGame/setDirection',
+      setDirection: 'snakeGame/setDirection',
       setGameSpeed: 'snakeGame/setGameSpeed',
     }),
 
@@ -110,21 +110,19 @@ export default {
       // debugger
 
       switch(e.code){
-        case 'ArrowUp': this.changeDirection(0)
+        case 'ArrowUp': this.setDirection('top')
         break;
-        case 'ArrowRight': this.changeDirection(1)
+        case 'ArrowRight': this.setDirection('right')
         break;
-        case 'ArrowDown': this.changeDirection(2)
+        case 'ArrowDown': this.setDirection('bottom')
         break;
-        case 'ArrowLeft': this.changeDirection(3)
+        case 'ArrowLeft': this.setDirection('left')
         break;
       }
-
-      //ArrowRight ArrowDown ArrowLeft ArrowUp
     },
 
     controllButton(e) {
-      this.changeDirection(e)
+      this.setDirection(e)
     },
 
     setNewGameSpeed() {

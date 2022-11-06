@@ -6,12 +6,15 @@
 		<div 
 		v-for="point in line" 
 		class="game__block"
-		:class="{
-			'game__block-head' : point == 0,
-			'game__block-body' : point == 1,
-			'game__block-food': point == 2
-		}"
+		
 		> 
+			<div :class="{
+				'game__block-head' : point == 0,
+				'game__block-body' : point == 1,
+				'game__block-food': point == 2
+			}">
+
+			</div>
 			<!-- <div class="game__block-food">
 
 			</div> -->
@@ -47,15 +50,26 @@ import { mapState } from 'vuex'
 		width: 23px
 		height: 23px
 		margin: 0
-		border: 1px white solid
+		border: 0.5px white solid
 		background-color: lightgrey
 		&-food
 			// background:  url('../img/apple.png')
+			width: 100%
+			height: 100%
 			background: center / contain no-repeat url("../img/apple.png")
 			background-color: lightgrey
-
 		&-head
-			background-color: black
+			width: 100%
+			height: 100%
+			background-color: #ff7c00
+			border-radius: 100%
+			color: grey
+		&-body
+			width: 100%
+			height: 100%
+			background-color: #40ae1a
+			border-radius: 100%
+
 		
 		
 
