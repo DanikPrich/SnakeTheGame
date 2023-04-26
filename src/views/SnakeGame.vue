@@ -4,11 +4,11 @@
     <game-field/>
 
     <div class="game__bottom">
-      <button @click="startGame" class="game__bottom-btns game__bottom-btns_start ">Start</button>
+      <button @click="startGame" class="game__bottom-btn game__bottom-btns_start ">Start</button>
       <span class="game__bottom-score" v-show="!$gameOver">Score: {{$score}}</span>
 
       
-      <button @click="refreshGame" class="game__bottom-btns game__bottom-btns_refresh"> Refresh </button>
+      <button @click="refreshGame" class="game__bottom-btn game__bottom-btns_refresh"> Refresh </button>
     </div>
 
     <label for="speed">Speed:</label>
@@ -138,14 +138,24 @@ export default {
 <style lang="sass" scoped>
 
 .game
+  max-width: 250px
+  margin: 0 auto
+  padding-top: 20px
+
+  &__field 
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+    border: 5px solid #bedfff
+
   &__bottom
-    width: 375px
+    width: 100%
     display: flex
     justify-content: space-between
     align-items: center
-    margin-top: 5px
-    &-btns
-      width: 100px
+    margin: 10px 0
+    &-btn
+      width: 85px
       height: 30px
       // margin-top: 10px
       // margin-right: 10px
@@ -155,6 +165,8 @@ export default {
       cursor: pointer
       color: black
       font-size: 16px
+      &:hover 
+        background-color: #e6f4ff
       &_start
         justify-content: start
         margin-bottom: 10px
@@ -162,25 +174,26 @@ export default {
         justify-content: center
     &-score
       color: green
-      font-size: 16px
+      font-size: 12px
       // margin-left: 15px
   &__over
+    position: absolute
+    top: 110px
+    left: 50%
+    transform: translateX(-50%)
     display: flex
     flex-direction: column
     align-items: center
     justify-content: space-between
-    height: 60px
-    width: 200px
-    padding: 10px
+    // height: 60px
+    // width: 200px
+    padding: 10px 30px
     background-color: rgba(255, 255, 255, 0.9)
-    position: absolute
-    top: 156px
-    left: 85px
     text-align: center
     border-radius: 10px
     &-title
       color: red
-      font-size: 28px
+      font-size: 13px
       // margin-left: 15px
       font-weight: bold
     &-text
@@ -194,7 +207,7 @@ export default {
 
 
 .controll
-  width: 375px
+  // width: 375px
   display: flex
   justify-content: center
   &__block
@@ -223,4 +236,64 @@ export default {
         background: center / contain no-repeat url("../img/Arrow.png")
         transform: rotate(90deg)
 
+@media (min-width: 330px)
+  .game
+    max-width: 310px
+    &__bottom
+      &-btn
+        width: 100px
+        height: 40px
+      &-score
+        font-size: 14px
+    &__over
+      top: 140px
+      padding: 10px 30px
+      &-title
+        font-size: 19px
+      &-text
+        font-size: 16px
+    
+
+@media (min-width: 500px)
+  .game
+    max-width: 460px
+    &__bottom
+      &-score
+        font-size: 19px
+    &__over
+      top: 200px
+      &-title
+        font-size: 30px
+      &-text
+        font-size: 20px
+    
+  .controll
+    &__block
+      width: 180px
+      &-button
+        width: 60px
+        height: 60px
+      
+
+@media (min-width: 800px)
+  .game
+    max-width: 760px
+
+    &__bottom
+      &-btn
+        width: 150px
+        height: 40px
+    
+    &__over
+      top: 340px
+      &-title
+        font-size: 35px
+      &-text
+        font-size: 24px
+  .controll
+    display: none
+
+// @media (min-width: 1024px)
+//   .game
+//     max-width: 990px
 </style>
